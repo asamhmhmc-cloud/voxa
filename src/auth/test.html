@@ -1,36 +1,46 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title>Voxa Login Test</title>
+  <title>تسجيل الدخول - Voxa</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
-<body>
 
-  <h2>تسجيل الدخول - Voxa</h2>
+<body style="font-family: sans-serif; padding:20px">
+
+  <h2>تسجيل الدخول برقم الهاتف</h2>
 
   <input
     id="phone"
     type="tel"
     placeholder="+967XXXXXXXXX"
+    style="width:100%; padding:10px; margin-bottom:10px"
   />
 
   <button onclick="sendCode()">إرسال الكود</button>
 
-  <br><br>
+  <br /><br />
 
   <input
-    id="code"
+    id="otp"
     type="text"
     placeholder="أدخل كود OTP"
+    style="width:100%; padding:10px; margin-bottom:10px"
   />
 
-  <button onclick="confirm()">تأكيد الكود</button>
+  <button onclick="confirmCode()">تأكيد الكود</button>
 
+  <!-- reCAPTCHA -->
   <div id="recaptcha-container"></div>
 
   <script type="module">
-    import { startApp, loginWithPhone, confirmCode } from "./src/app/index.js";
+    import {
+      startApp,
+      loginWithPhone,
+      confirmCode
+    } from "./index.js";
 
+    // تهيئة Firebase + reCAPTCHA
     startApp();
 
     window.sendCode = async () => {
@@ -39,8 +49,8 @@
       alert("تم إرسال الكود");
     };
 
-    window.confirm = async () => {
-      const code = document.getElementById("code").value;
+    window.confirmCode = async () => {
+      const code = document.getElementById("otp").value;
       const user = await confirmCode(code);
       alert("تم تسجيل الدخول: " + user.phoneNumber);
     };
