@@ -1,40 +1,33 @@
-// Firebase Phone Authentication
-// Voxa App
+import { initRecaptcha, sendOTP } from "./phoneAuth";
+import { auth } from "../firebase";
+import { signInWithCredential, PhoneAuthProvider } from "firebase/auth";
 
-import { initializeApp } from "firebase/app";
-import {
-  getAuth,
-  signInWithPhoneNumber,
-  RecaptchaVerifier
-} from "firebase/auth";
+let confirmationResult = null;
 
-// ضع بيانات Firebase الخاصة بك هنا
-const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  appId: "YOUR_APP_ID",
+// تفعيل reCAPTCHA
+initRecaptcha("recaptcha-container");
+
+// إرسال الكود
+document.getElementById("sendCode").onclick = async () => {
+  const phone = document.getElementById("phone").value;
+
+  try {
+    confirmationResult = await sendOTP(phone);
+    alert("تم إرسال رمز التحقق");
+  } catch (err) {
+    alert(err.message);
+  }
 };
 
-const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
+// تأكيد الكود
+document.getElementById("verifyCode").onclick = async () => {
+  const code = document.getElementById("otp").value;
 
-// تفعيل reCAPTCHA (مخفي)
-export function initRecaptcha(containerId) {
-  if (!window.recaptchaVerifier) {
-    window.recaptchaVerifier = new RecaptchaVerifier(
-      containerId,
-      { size: "invisible" },
-      auth
-    );
+  try {
+    const result = await confirmationResult.confirm(code);
+    console.log("تم تسجيل الدخول:", result.user);
+    alert("تم تسجيل الدخول بنجاح ✅");
+  } catch (err) {
+    alert("رمز غير صحيح ❌");
   }
-}
-
-// إرسال رمز التحقق
-export function sendOTP(phoneNumber) {
-  return signInWithPhoneNumber(
-    auth,
-    phoneNumber,
-    window.recaptchaVerifier
-  );
-}
+};
