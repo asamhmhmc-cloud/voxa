@@ -4,22 +4,32 @@ import {
   signInWithPhoneNumber
 } from "firebase/auth";
 
-// تفعيل reCAPTCHA المخفي
-export function initRecaptcha(containerId) {
+let confirmationResult;
+
+// 🔐 تهيئة reCAPTCHA
+export function initRecaptcha() {
   if (!window.recaptchaVerifier) {
     window.recaptchaVerifier = new RecaptchaVerifier(
-      containerId,
-      { size: "invisible" },
+      "recaptcha-container",
+      { size: "normal" },
       auth
     );
   }
 }
 
-// إرسال كود التحقق
+// 📲 إرسال كود التحقق
 export function sendOTP(phoneNumber) {
-  return signInWithPhoneNumber(
-    auth,
-    phoneNumber,
-    window.recaptchaVerifier
-  );
+  initRecaptcha();
+  const appVerifier = window.recaptchaVerifier;
+
+  return signInWithPhoneNumber(auth, phoneNumber, appVerifier)
+    .then((result) => {
+      confirmationResult = result;
+      return true;
+    });
+}
+
+// ✅ تأكيد الكود
+export function verifyOTP(code) {
+  return confirmationResult.confirm(code);
 }
