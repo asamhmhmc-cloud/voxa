@@ -2,33 +2,49 @@
 <html lang="ar">
 <head>
   <meta charset="UTF-8" />
-  <title>تسجيل الدخول بالهاتف</title>
+  <title>Voxa Login Test</title>
 </head>
 <body>
 
-  <h2>تسجيل الدخول</h2>
+  <h2>تسجيل الدخول - Voxa</h2>
 
   <input
-    type="text"
     id="phone"
-    placeholder="+967xxxxxxxxx"
+    type="tel"
+    placeholder="+967XXXXXXXXX"
   />
 
-  <button id="sendCode">إرسال الكود</button>
+  <button onclick="sendCode()">إرسال الكود</button>
 
   <br><br>
 
   <input
+    id="code"
     type="text"
-    id="otp"
-    placeholder="رمز التحقق"
+    placeholder="أدخل كود OTP"
   />
 
-  <button id="verifyCode">تأكيد</button>
+  <button onclick="confirm()">تأكيد الكود</button>
 
-  <!-- reCAPTCHA container -->
   <div id="recaptcha-container"></div>
 
-  <script type="module" src="./index.js"></script>
+  <script type="module">
+    import { startApp, loginWithPhone, confirmCode } from "./src/app/index.js";
+
+    startApp();
+
+    window.sendCode = async () => {
+      const phone = document.getElementById("phone").value;
+      await loginWithPhone(phone);
+      alert("تم إرسال الكود");
+    };
+
+    window.confirm = async () => {
+      const code = document.getElementById("code").value;
+      const user = await confirmCode(code);
+      alert("تم تسجيل الدخول: " + user.phoneNumber);
+    };
+  </script>
+
 </body>
 </html>
