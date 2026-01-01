@@ -1,36 +1,44 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <title>Voxa Auth Test</title>
+  <meta charset="UTF-8">
+  <title>اختبار تسجيل الدخول - Voxa</title>
 </head>
-<body style="font-family: sans-serif">
+<body>
 
-  <h2>اختبار تسجيل الدخول - Voxa</h2>
+  <h2>تسجيل الدخول برقم الهاتف</h2>
 
   <input
+    type="text"
     id="phone"
     placeholder="+9677XXXXXXXX"
-    style="padding:10px; width:220px"
+    style="padding:10px;width:250px;"
   />
 
-  <button onclick="send()" style="padding:10px">
-    إرسال رمز OTP
-  </button>
+  <br><br>
 
-  <div id="recaptcha"></div>
+  <button id="send">إرسال رمز التحقق</button>
+
+  <!-- reCAPTCHA -->
+  <div id="recaptcha-container"></div>
 
   <script type="module">
     import { initRecaptcha, sendOTP } from "./index.js";
 
-    initRecaptcha("recaptcha");
+    initRecaptcha("recaptcha-container");
 
-    window.send = async () => {
+    document.getElementById("send").onclick = async () => {
       const phone = document.getElementById("phone").value;
+
+      if (!phone) {
+        alert("أدخل رقم الهاتف");
+        return;
+      }
+
       try {
-        const result = await sendOTP(phone);
-        window.confirmationResult = result;
-        alert("تم إرسال الرمز ✔️");
+        const confirmationResult = await sendOTP(phone);
+        window.confirmationResult = confirmationResult;
+        alert("تم إرسال رمز التحقق (OTP)");
       } catch (e) {
         alert("خطأ: " + e.message);
       }
