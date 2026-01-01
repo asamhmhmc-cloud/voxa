@@ -1,4 +1,4 @@
-// Firebase Phone Authentication (Test Mode)
+// Firebase Phone Authentication
 // Voxa App
 
 import { initializeApp } from "firebase/app";
@@ -8,7 +8,7 @@ import {
   RecaptchaVerifier
 } from "firebase/auth";
 
-// TODO: ضع بيانات Firebase هنا
+// ضع بيانات Firebase الخاصة بك هنا
 const firebaseConfig = {
   apiKey: "YOUR_API_KEY",
   authDomain: "YOUR_PROJECT.firebaseapp.com",
@@ -19,7 +19,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 
-// تفعيل reCAPTCHA المخفي
+// تفعيل reCAPTCHA (مخفي)
 export function initRecaptcha(containerId) {
   if (!window.recaptchaVerifier) {
     window.recaptchaVerifier = new RecaptchaVerifier(
@@ -30,6 +30,11 @@ export function initRecaptcha(containerId) {
   }
 }
 
-// إرسال كود التحقق
-exp
+// إرسال رمز التحقق
+export function sendOTP(phoneNumber) {
+  return signInWithPhoneNumber(
+    auth,
+    phoneNumber,
+    window.recaptchaVerifier
+  );
 }
