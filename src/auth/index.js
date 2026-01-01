@@ -1,5 +1,5 @@
-// Voxa - Firebase Phone Authentication Logic
-// Test Mode Ready
+// Firebase Phone Authentication (Test Mode)
+// Voxa App
 
 import { initializeApp } from "firebase/app";
 import {
@@ -8,10 +8,7 @@ import {
   RecaptchaVerifier
 } from "firebase/auth";
 
-/**
- * 1️⃣ إعداد Firebase
- * ⚠️ لاحقًا ستستبدل القيم ببياناتك الحقيقية
- */
+// TODO: ضع بيانات Firebase هنا
 const firebaseConfig = {
   apiKey: "YOUR_API_KEY",
   authDomain: "YOUR_PROJECT.firebaseapp.com",
@@ -20,12 +17,10 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+export const auth = getAuth(app);
 
-/**
- * 2️⃣ تفعيل reCAPTCHA (وضع الاختبار)
- */
-export function initRecaptcha(containerId = "recaptcha-container") {
+// تفعيل reCAPTCHA المخفي
+export function initRecaptcha(containerId) {
   if (!window.recaptchaVerifier) {
     window.recaptchaVerifier = new RecaptchaVerifier(
       containerId,
@@ -35,32 +30,11 @@ export function initRecaptcha(containerId = "recaptcha-container") {
   }
 }
 
-/**
- * 3️⃣ إرسال رمز التحقق (OTP)
- */
-export async function sendOTP(phoneNumber) {
-  if (!window.recaptchaVerifier) {
-    throw new Error("reCAPTCHA غير مفعّل");
-  }
-
-  const confirmationResult = await signInWithPhoneNumber(
+// إرسال كود التحقق
+export function sendOTP(phoneNumber) {
+  return signInWithPhoneNumber(
     auth,
     phoneNumber,
     window.recaptchaVerifier
   );
-
-  window.confirmationResult = confirmationResult;
-  return true;
-}
-
-/**
- * 4️⃣ تأكيد رمز OTP
- */
-export async function verifyOTP(code) {
-  if (!window.confirmationResult) {
-    throw new Error("لم يتم إرسال رمز التحقق");
-  }
-
-  const result = await window.confirmationResult.confirm(code);
-  return result.user;
 }
