@@ -31,10 +31,5 @@ export function initRecaptcha(containerId) {
 }
 
 // إرسال كود التحقق
-export function sendOTP(phoneNumber) {
-  return signInWithPhoneNumber(
-    auth,
-    phoneNumber,
-    window.recaptchaVerifier
-  );
+exp
 }
