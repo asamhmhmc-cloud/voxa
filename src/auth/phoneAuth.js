@@ -4,7 +4,7 @@ import {
   signInWithPhoneNumber
 } from "firebase/auth";
 
-let confirmationResult;
+let confirmationResult = null;
 
 // 🔐 تهيئة reCAPTCHA
 export function initRecaptcha() {
@@ -18,18 +18,16 @@ export function initRecaptcha() {
 }
 
 // 📲 إرسال كود التحقق
-export function sendOTP(phoneNumber) {
+export async function sendOTP(phoneNumber) {
   initRecaptcha();
+
   const appVerifier = window.recaptchaVerifier;
 
-  return signInWithPhoneNumber(auth, phoneNumber, appVerifier)
-    .then((result) => {
-      confirmationResult = result;
-      return true;
-    });
-}
+  confirmationResult = await signInWithPhoneNumber(
+    auth,
+    phoneNumber,
+    appVerifier
+  );
 
-// ✅ تأكيد الكود
-export function verifyOTP(code) {
-  return confirmationResult.confirm(code);
+  return true;
 }
