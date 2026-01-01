@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <title>Voxa Auth Test</title>
+</head>
+<body style="font-family: sans-serif">
+
+  <h2>اختبار تسجيل الدخول - Voxa</h2>
+
+  <input
+    id="phone"
+    placeholder="+9677XXXXXXXX"
+    style="padding:10px; width:220px"
+  />
+
+  <button onclick="send()" style="padding:10px">
+    إرسال رمز OTP
+  </button>
+
+  <div id="recaptcha"></div>
+
+  <script type="module">
+    import { initRecaptcha, sendOTP } from "./index.js";
+
+    initRecaptcha("recaptcha");
+
+    window.send = async () => {
+      const phone = document.getElementById("phone").value;
+      try {
+        const result = await sendOTP(phone);
+        window.confirmationResult = result;
+        alert("تم إرسال الرمز ✔️");
+      } catch (e) {
+        alert("خطأ: " + e.message);
+      }
+    };
+  </script>
+
+</body>
+</html>
